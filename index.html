@@ -137,8 +137,11 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 
       function vibrateOnce() {
         const ms = Math.max(1, Math.min(10000, Number(durationEl.value) || 200));
-        navigator.vibrate(ms);
+        console.log("Trying to vibrate:", ms, "ms");
+        const result = navigator.vibrate(ms);
+        console.log("navigator.vibrate returned:", result);
       }
+
 
       function vibrateFromPattern() {
         const raw = patternEl.value.trim();
