@@ -1,176 +1,231 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vibrate on Click</title>
-  <style>
-    :root {
-      --bg: #0f172a; /* slate-900 */
-      --card: #111827; /* gray-900 */
-      --text: #e5e7eb; /* gray-200 */
-      --muted: #9ca3af; /* gray-400 */
-      --accent: #22c55e; /* green-500 */
-      --accent-2: #3b82f6; /* blue-500 */
-      --danger: #ef4444; /* red-500 */
-      --ring: rgba(59,130,246,.35);
-    }* { box-sizing: border-box; }
-html, body { height: 100%; }
-body {
-  margin: 0;
-  background: radial-gradient(60vw 60vh at 70% 20%, rgba(34,197,94,0.08), transparent 60%),
-              radial-gradient(60vw 60vh at 20% 80%, rgba(59,130,246,0.08), transparent 60%),
-              var(--bg);
-  color: var(--text);
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  display: grid;
-  place-items: center;
-  padding: 24px;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibration Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.card {
-  width: min(520px, 96vw);
-  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 24px;
-  padding: 24px;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
-  backdrop-filter: blur(10px);
-}
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
 
-h1 { margin: 0 0 6px; font-size: clamp(1.3rem, 2.8vw, 1.8rem); }
-p { margin: 0; color: var(--muted); }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-.row { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 18px; }
+        h1 {
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
 
-.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .vibrate-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            margin: 0.5rem;
+            outline: none;
+        }
 
-label { font-size: .9rem; color: var(--text); display: block; margin-bottom: 6px; }
+        .vibrate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+        }
 
-input[type="number"], input[type="text"] {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.16);
-  background: rgba(255,255,255,0.06);
-  color: var(--text);
-  outline: none;
-}
-input:focus { box-shadow: 0 0 0 4px var(--ring); }
+        .vibrate-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(255, 107, 107, 0.4);
+        }
 
-.buttons { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 8px; }
+        .pattern-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
+        }
 
-button {
-  appearance: none;
-  border: none;
-  border-radius: 16px;
-  padding: 14px 16px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: white;
-  cursor: pointer;
-  transition: transform .04s ease, filter .2s ease, opacity .2s ease;
-}
-button:active { transform: translateY(1px) scale(0.99); }
-button:disabled { opacity: .5; cursor: not-allowed; }
+        .pattern-btn:hover {
+            box-shadow: 0 6px 20px rgba(78, 205, 196, 0.6);
+        }
 
-.btn-primary { background: linear-gradient(180deg, var(--accent), #15803d); }
-.btn-pattern { background: linear-gradient(180deg, var(--accent-2), #1d4ed8); }
-.btn-stop { background: linear-gradient(180deg, var(--danger), #b91c1c); }
+        .pattern-btn:active {
+            box-shadow: 0 3px 10px rgba(78, 205, 196, 0.4);
+        }
 
-.support {
-  margin-top: 16px;
-  font-size: .95rem;
-  padding: 12px 14px;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-}
-.small { font-size: .85rem; color: var(--muted); }
-.kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background: rgba(0,0,0,0.35); padding: 2px 6px; border-radius: 6px; }
+        .status {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            font-size: 1rem;
+        }
 
-  </style>
+        .supported {
+            color: #4ecdc4;
+        }
+
+        .not-supported {
+            color: #ff6b6b;
+        }
+
+        .info {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .vibrate-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <main class="card">
-    <h1>Vibrate on Button Click</h1>
-    <p>Tap a button below to trigger haptic feedback (on supported devices).</p><div class="row">
-  <div class="controls">
-    <div>
-      <label for="duration">Duration (ms)</label>
-      <input id="duration" type="number" min="1" max="10000" step="10" value="200" />
+    <div class="container">
+        <h1>📱 Vibration Demo</h1>
+        
+        <button class="vibrate-btn" onclick="vibrateShort()">
+            Short Vibration
+        </button>
+        
+        <button class="vibrate-btn" onclick="vibrateLong()">
+            Long Vibration
+        </button>
+        
+        <button class="vibrate-btn pattern-btn" onclick="vibratePattern()">
+            Pattern Vibration
+        </button>
+        
+        <div class="status" id="status">
+            Checking vibration support...
+        </div>
+        
+        <div class="info">
+            <p>💡 <strong>Note:</strong> Vibration API works on mobile devices and some tablets.</p>
+            <p>🔧 Try different vibration patterns by clicking the buttons above.</p>
+        </div>
     </div>
-    <div>
-      <label for="pattern">Pattern (comma‑separated ms)</label>
-      <input id="pattern" type="text" placeholder="e.g. 80,40,80,200,120" />
-    </div>
-  </div>
 
-  <div class="buttons">
-    <button id="vibrateOnce" class="btn-primary">Vibrate Once</button>
-    <button id="vibratePattern" class="btn-pattern">Vibrate Pattern</button>
-    <button id="stopVibration" class="btn-stop">Stop</button>
-  </div>
-
-  <div id="supportMsg" class="support"></div>
-  <p class="small">Tips: Works only on supported devices/browsers, typically over <span class="kbd">https://</span> and after a user tap. iOS Safari has limited/No support for the Vibration API.</p>
-</div>
-
-  </main>  <script>
-    (function () {
-      const supportEl = document.getElementById('supportMsg');
-      const btnOnce = document.getElementById('vibrateOnce');
-      const btnPattern = document.getElementById('vibratePattern');
-      const btnStop = document.getElementById('stopVibration');
-      const durationEl = document.getElementById('duration');
-      const patternEl = document.getElementById('pattern');
-
-      const isSupported = 'vibrate' in navigator && typeof navigator.vibrate === 'function';
-
-      function setSupportMessage() {
-        if (isSupported) {
-          supportEl.textContent = '✅ Vibration API is supported on this device/browser.';
-        } else {
-          supportEl.textContent = '❌ Vibration API not supported here. Try an Android device with Chrome/Firefox, use HTTPS, and ensure you tap a button.';
-          [btnOnce, btnPattern, btnStop, durationEl, patternEl].forEach(el => el.disabled = true);
+    <script>
+        // Check if vibration is supported
+        function checkVibrationSupport() {
+            const statusElement = document.getElementById('status');
+            
+            if ('vibrate' in navigator) {
+                statusElement.innerHTML = '<span class="supported">✅ Vibration is supported on this device!</span>';
+                return true;
+            } else {
+                statusElement.innerHTML = '<span class="not-supported">❌ Vibration is not supported on this device</span>';
+                return false;
+            }
         }
-      }
 
-      function vibrateOnce() {
-        const ms = Math.max(1, Math.min(10000, Number(durationEl.value) || 200));
-        console.log("Trying to vibrate:", ms, "ms");
-        const result = navigator.vibrate(ms);
-        console.log("navigator.vibrate returned:", result);
-      }
-
-
-      function vibrateFromPattern() {
-        const raw = patternEl.value.trim();
-        if (!raw) {
-          // Default demo pattern if none provided
-          navigator.vibrate([80, 60, 80, 200, 120]);
-          return;
+        // Short vibration (200ms)
+        function vibrateShort() {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(200);
+                console.log('Short vibration triggered');
+            } else {
+                alert('Vibration not supported on this device');
+            }
         }
-        const arr = raw.split(',')
-          .map(x => x.trim())
-          .map(x => Number(x))
-          .filter(x => Number.isFinite(x) && x > 0)
-          .map(x => Math.min(10000, Math.round(x)));
-        if (arr.length === 0) {
-          navigator.vibrate(100);
-        } else {
-          navigator.vibrate(arr);
+
+        // Long vibration (1000ms)
+        function vibrateLong() {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(1000);
+                console.log('Long vibration triggered');
+            } else {
+                alert('Vibration not supported on this device');
+            }
         }
-      }
 
-      function stopVibration() {
-        navigator.vibrate(0);
-      }
+        // Pattern vibration (vibrate for 200ms, pause 100ms, vibrate 200ms, pause 100ms, vibrate 200ms)
+        function vibratePattern() {
+            if ('vibrate' in navigator) {
+                // Pattern: [vibrate, pause, vibrate, pause, vibrate]
+                navigator.vibrate([200, 100, 200, 100, 200]);
+                console.log('Pattern vibration triggered');
+            } else {
+                alert('Vibration not supported on this device');
+            }
+        }
 
-      btnOnce.addEventListener('click', vibrateOnce);
-      btnPattern.addEventListener('click', vibrateFromPattern);
-      btnStop.addEventListener('click', stopVibration);
+        // Stop all vibrations
+        function stopVibration() {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(0);
+                console.log('Vibration stopped');
+            }
+        }
 
-      setSupportMessage();
-    })();
-  </script></body>
+        // Add click event listeners for additional interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            checkVibrationSupport();
+            
+            // Add a subtle vibration to the entire container when clicked
+            const container = document.querySelector('.container');
+            container.addEventListener('click', function(e) {
+                // Only vibrate if the click wasn't on a button
+                if (!e.target.classList.contains('vibrate-btn') && !e.target.classList.contains('pattern-btn')) {
+                    if ('vibrate' in navigator) {
+                        navigator.vibrate(50); // Very short vibration for feedback
+                    }
+                }
+            });
+        });
+
+        // Add keyboard support
+        document.addEventListener('keydown', function(e) {
+            switch(e.key) {
+                case '1':
+                    vibrateShort();
+                    break;
+                case '2':
+                    vibrateLong();
+                    break;
+                case '3':
+                    vibratePattern();
+                    break;
+                case 'Escape':
+                    stopVibration();
+                    break;
+            }
+        });
+    </script>
+</body>
 </html>
